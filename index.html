@@ -13,6 +13,7 @@
 
     .dashboard {
       display: flex;
+      flex-direction: row;
       height: 100vh;
     }
 
@@ -21,15 +22,32 @@
       background-color: #2f3e46;
       color: white;
       padding: 20px;
+      flex-shrink: 0;
     }
 
     .sidebar h2 {
+      margin-top: 0;
+      font-size: 1.2em;
+    }
+
+    .audit-item {
+      cursor: pointer;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid #444;
+      transition: background-color 0.3s ease;
+      font-size: 1em;
+    }
+
+    .audit-item:hover {
       background-color: #3d4f58;
     }
 
     .icon {
-      width: 12px;
-      height: 12px;
+      width: 14px;
+      height: 14px;
       border-radius: 50%;
       display: inline-block;
       transition: background-color 0.3s ease;
@@ -49,12 +67,14 @@
 
     .content {
       flex: 1;
-      padding: 30px;
+      padding: 20px;
       background-color: #fff;
+      overflow-y: auto;
     }
 
     #audit-title {
       margin-top: 0;
+      font-size: 1.5em;
     }
 
     .user-selector {
@@ -62,6 +82,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      flex-wrap: wrap;
     }
 
     .user-selector label {
@@ -73,6 +94,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      flex-wrap: wrap;
     }
 
     progress {
@@ -86,7 +108,7 @@
     }
 
     #audit-checklist li {
-      padding: 10px;
+      padding: 12px;
       border-bottom: 1px solid #ddd;
       display: flex;
       align-items: center;
@@ -118,11 +140,13 @@
     .temp-input {
       width: 80px;
       margin-right: 10px;
+      font-size: 1em;
+      padding: 4px;
     }
 
     #amend-button {
       margin-top: 20px;
-      padding: 8px 16px;
+      padding: 10px 16px;
       font-size: 1em;
       background-color: #0077cc;
       color: white;
@@ -132,22 +156,31 @@
       display: none;
     }
 
-    .audit-item {
-  cursor: pointer;
-  padding: 10px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border-bottom: 1px solid #444;
-  transition: background-color 0.3s ease;
-}
-
-.audit-item:hover {
-  background-color: #3d4f58;
-}
-
     #amend-button:hover {
       background-color: #005fa3;
+    }
+
+    @media (max-width: 768px) {
+      .dashboard {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        padding: 10px;
+      }
+
+      .audit-item {
+        font-size: 1.1em;
+      }
+
+      .content {
+        padding: 15px;
+      }
+
+      .temp-input {
+        width: 100px;
+      }
     }
   </style>
 </head>
