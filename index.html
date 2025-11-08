@@ -5,186 +5,40 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Audit Dashboard</title>
 <style>
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #f4f6f8;
-}
-
-.dashboard {
-  display: flex;
-  flex-direction: row;
-  height: 100vh;
-}
-
-.sidebar {
-  width: 250px;
-  background-color: #2f3e46;
-  color: white;
-  padding: 20px;
-  flex-shrink: 0;
-}
-
-.sidebar h2 {
-  margin-top: 0;
-  font-size: 1.2em;
-}
-
-.audit-item {
-  cursor: pointer;
-  padding: 12px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border-bottom: 1px solid #444;
-  transition: background-color 0.3s ease;
-  font-size: 1em;
-}
-
-.audit-item:hover {
-  background-color: #3d4f58;
-}
-
-.icon {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  display: inline-block;
-  transition: background-color 0.3s ease;
-}
-
-.completed {
-  background-color: green;
-}
-
-.pending {
-  background-color: orange;
-}
-
-.not-required {
-  background-color: grey;
-}
-
-.content {
-  flex: 1;
-  padding: 20px;
-  background-color: #fff;
-  overflow-y: auto;
-}
-
-#audit-title {
-  margin-top: 0;
-  font-size: 1.5em;
-}
-
-.user-selector {
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.user-selector label {
-  font-weight: bold;
-}
-
-.progress-section {
-  margin: 20px 0;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-progress {
-  width: 100%;
-  height: 20px;
-}
-
-#audit-checklist {
-  list-style: none;
-  padding: 0;
-}
-
-#audit-checklist li {
-  padding: 12px;
-  border-bottom: 1px solid #ddd;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.check-item {
-  margin-right: 10px;
-}
-
-.check-item:disabled + label {
-  color: #aaa;
-}
-
-.checked-item {
-  background-color: #eee;
-  color: #888;
-  text-decoration: line-through;
-}
-
-.meta-info {
-  margin-left: auto;
-  font-style: italic;
-  color: #666;
-  font-size: 0.85em;
-}
-
-.temp-input {
-  width: 80px;
-  margin-right: 10px;
-  font-size: 1em;
-  padding: 4px;
-}
-
-#amend-button {
-  margin-top: 20px;
-  padding: 10px 16px;
-  font-size: 1em;
-  background-color: #0077cc;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  display: none;
-}
-
-#amend-button:hover {
-  background-color: #005fa3;
-}
-
+body { margin: 0; font-family: Arial, sans-serif; background-color: #f4f6f8; }
+.dashboard { display: flex; flex-direction: row; height: 100vh; }
+.sidebar { width: 250px; background-color: #2f3e46; color: white; padding: 20px; flex-shrink: 0; }
+.sidebar h2 { margin-top: 0; font-size: 1.2em; }
+.audit-item { cursor: pointer; padding: 12px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #444; transition: background-color 0.3s ease; font-size: 1em; }
+.audit-item:hover { background-color: #3d4f58; }
+.icon { width: 14px; height: 14px; border-radius: 50%; display: inline-block; transition: background-color 0.3s ease; }
+.completed { background-color: green; }
+.pending { background-color: orange; }
+.not-required { background-color: grey; }
+.content { flex: 1; padding: 20px; background-color: #fff; overflow-y: auto; }
+#audit-title { margin-top: 0; font-size: 1.5em; }
+.user-selector { margin-bottom: 20px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.user-selector label { font-weight: bold; }
+.progress-section { margin: 20px 0; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+progress { width: 100%; height: 20px; }
+#audit-checklist { list-style: none; padding: 0; }
+#audit-checklist li { padding: 12px; border-bottom: 1px solid #ddd; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.check-item { margin-right: 10px; }
+.check-item:disabled + label { color: #aaa; }
+.checked-item { background-color: #eee; color: #888; text-decoration: line-through; }
+.meta-info { margin-left: auto; font-style: italic; color: #666; font-size: 0.85em; }
+.temp-input { width: 80px; margin-right: 10px; font-size: 1em; padding: 4px; }
+#amend-button { margin-top: 20px; padding: 10px 16px; font-size: 1em; background-color: #0077cc; color: white; border: none; border-radius: 4px; cursor: pointer; display: none; }
+#amend-button:hover { background-color: #005fa3; }
 @media (max-width: 768px) {
-  .dashboard {
-    flex-direction: column;
-  }
-
-  .sidebar {
-    width: 100%;
-    padding: 10px;
-  }
-
-  .audit-item {
-    font-size: 1.1em;
-  }
-
-  .content {
-    padding: 15px;
-  }
-
-  .temp-input {
-    width: 100px;
-  }
+  .dashboard { flex-direction: column; }
+  .sidebar { width: 100%; padding: 10px; }
+  .audit-item { font-size: 1.1em; }
+  .content { padding: 15px; }
+  .temp-input { width: 100px; }
 }
 </style>
 </head>
-
 <body>
 <div class="dashboard">
   <aside class="sidebar">
@@ -196,10 +50,8 @@ progress {
       <li data-id="audit4" class="audit-item"><span class="icon pending"></span> Temperatures</li>
     </ul>
   </aside>
-
   <main class="content">
     <h2 id="audit-title">Select an audit</h2>
-
     <div class="user-selector">
       <label for="user-select">Current User:</label>
       <select id="user-select">
@@ -209,48 +61,22 @@ progress {
         <option value="Admin">Admin</option>
       </select>
     </div>
-
     <div class="progress-section">
       <label for="progress">Completion:</label>
       <progress id="progress" value="0" max="100"></progress>
       <span id="progress-text">0%</span>
     </div>
-
     <ul id="audit-checklist"></ul>
     <button id="amend-button">Amend</button>
   </main>
 </div>
 
-<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script>
-// 🔧 Replace with your Supabase details
-const supabase = supabase.createClient(
-  "https://YOUR_PROJECT.supabase.co",
-  "YOUR_ANON_KEY"
-);
-
-async function saveItemToDatabase(auditId, itemIndex) {
-  const item = checklistState[auditId][itemIndex];
-  const user = document.getElementById("user-select").value;
-  const record = {
-    audit_id: auditId,
-    item_name: item.text || item.name,
-    checked: item.checked || true,
-    user_name: user,
-    timestamp: new Date().toISOString()
-  };
-  const { error } = await supabase.from("audits").insert([record]);
-  if (error) console.error("Error saving item:", error);
-}
-
-// ----- AUDITS -----
 const audits = {
-  audit1: { title:"Patient Records", type:"checklist", items:["Verify patient ID","Check admission date","Review discharge summary"] },
-  audit2: { title:"Medication Logs", type:"checklist", items:["Confirm dosage accuracy","Check administration times","Review allergy documentation"] },
-  audit3: { title:"Equipment Safety", type:"checklist", items:["Inspect defibrillator","Check oxygen tanks","Review maintenance logs"] },
-  audit4: { title:"Temperatures", type:"temperature", labs:{
-    "Lab 1":["Room Temperature"], "Lab 2":["Room Temperature"], "Lab 3":["Room Temperature","Fridge Temperature"], "Lab 4":["Room Temperature"], "Lab 5":["Room Temperature"]
-  }}
+  audit1: { title: "Patient Records", type: "checklist", items: ["Verify patient ID", "Check admission date", "Review discharge summary"] },
+  audit2: { title: "Medication Logs", type: "checklist", items: ["Confirm dosage accuracy", "Check administration times", "Review allergy documentation"] },
+  audit3: { title: "Equipment Safety", type: "checklist", items: ["Inspect defibrillator", "Check oxygen tanks", "Review maintenance logs"] },
+  audit4: { title: "Temperatures", type: "temperature", labs: { "Lab 1": ["Room Temperature"], "Lab 2": ["Room Temperature"], "Lab 3": ["Room Temperature", "Fridge Temperature"], "Lab 4": ["Room Temperature"], "Lab 5": ["Room Temperature"] } }
 };
 
 let currentAuditId = null;
@@ -259,45 +85,43 @@ let checklistState = {};
 function updateProgress() {
   const state = checklistState[currentAuditId];
   let total = 0, filled = 0;
+  const audit = audits[currentAuditId];
 
-  if(audits[currentAuditId].type === "checklist"){
+  if(audit.type === "checklist") {
     total = state.length;
-    filled = state.filter(i=>i.checked).length;
-  } else if(audits[currentAuditId].type==="temperature"){
-    for(const lab of state){
-      for(const field of lab.fields){
-        total += 3;
-        if(field.max && field.min && field.current) filled+=3;
-      }
+    filled = state.filter(i => i.checked).length;
+  } else if(audit.type === "temperature") {
+    for(const lab of state) for(const field of lab.fields) {
+      total += 3;
+      if(field.max && field.min && field.current) filled += 3;
     }
   }
 
-  const percent = total ? Math.round((filled/total)*100):0;
+  const percent = total ? Math.round((filled/total)*100) : 0;
   document.getElementById("progress").value = percent;
   document.getElementById("progress-text").textContent = `${percent}%`;
 
   const icon = document.querySelector(`.audit-item[data-id="${currentAuditId}"] .icon`);
-  if(percent===100){ icon.classList.remove("pending","not-required"); icon.classList.add("completed"); }
-  else{ icon.classList.remove("completed","not-required"); icon.classList.add("pending"); }
+  if(percent === 100){ icon.classList.remove("pending","not-required"); icon.classList.add("completed"); }
+  else { icon.classList.remove("completed","not-required"); icon.classList.add("pending"); }
 
   const amendButton = document.getElementById("amend-button");
-  if(audits[currentAuditId].type==="checklist"){
+  if(audit.type === "checklist"){
     const checklistItems = document.querySelectorAll(".check-item");
-    if(percent===100){ checklistItems.forEach(cb=>cb.disabled=true); amendButton.style.display="inline-block"; }
-    else{ checklistItems.forEach(cb=>cb.disabled=false); amendButton.style.display="none"; }
+    if(percent === 100){ checklistItems.forEach(cb=>cb.disabled=true); amendButton.style.display="inline-block"; }
+    else { checklistItems.forEach(cb=>cb.disabled=false); amendButton.style.display="none"; }
   } else { amendButton.style.display="none"; }
 }
 
-// ----- RENDER CHECKLIST -----
-function renderChecklist(){
+function renderChecklist() {
   const checklist = document.getElementById("audit-checklist");
-  checklist.innerHTML="";
+  checklist.innerHTML = "";
   const items = checklistState[currentAuditId];
-  items.sort((a,b)=>a.checked-b.checked);
+  items.sort((a,b) => a.checked-b.checked);
 
   items.forEach((item,index)=>{
     const li=document.createElement("li");
-    li.className = item.checked ? "checked-item" : "";
+    li.className=item.checked ? "checked-item" : "";
 
     const checkbox=document.createElement("input");
     checkbox.type="checkbox";
@@ -313,96 +137,59 @@ function renderChecklist(){
     meta.className="meta-info";
     meta.textContent=item.checked ? `✔ by ${item.user} on ${item.timestamp}` : "";
 
-    checkbox.addEventListener("change", ()=>{
-      const selectedUser=document.getElementById("user-select").value;
+    checkbox.addEventListener("change",()=>{
+      const user=document.getElementById("user-select").value;
       item.checked=checkbox.checked;
-      item.timestamp=checkbox.checked?new Date().toLocaleString():"";
-      item.user=checkbox.checked?selectedUser:"";
-      renderChecklist();
-      updateProgress();
-      saveItemToDatabase(currentAuditId,index);
+      item.timestamp=checkbox.checked ? new Date().toLocaleString() : "";
+      item.user=checkbox.checked ? user : "";
+      renderChecklist(); updateProgress();
     });
 
-    li.appendChild(checkbox);
-    li.appendChild(label);
-    li.appendChild(meta);
+    li.appendChild(checkbox); li.appendChild(label); li.appendChild(meta);
     checklist.appendChild(li);
   });
+
   updateProgress();
 }
 
-// ----- RENDER TEMPERATURE -----
-function renderTemperatureInputs(){
-  const checklist = document.getElementById("audit-checklist");
+function renderTemperatureInputs() {
+  const checklist=document.getElementById("audit-checklist");
   checklist.innerHTML="";
-  const labs = checklistState[currentAuditId];
+  const labs=checklistState[currentAuditId];
 
-  labs.forEach((lab)=>{
-    lab.fields.forEach((field)=>{
+  labs.forEach(lab=>{
+    lab.fields.forEach(field=>{
       const li=document.createElement("li");
       li.innerHTML=`<strong>${lab.name} - ${field.name}</strong>`;
       ["max","min","current"].forEach(type=>{
         const input=document.createElement("input");
-        input.type="number";
-        input.placeholder=type;
-        input.className="temp-input";
-        input.value=field[type];
-        input.addEventListener("input",()=>{
-          field[type]=input.value;
-          updateProgress();
-        });
+        input.type="number"; input.placeholder=type; input.className="temp-input"; input.value=field[type];
+        input.addEventListener("input",()=>{ field[type]=input.value; updateProgress(); });
         li.appendChild(input);
       });
       checklist.appendChild(li);
     });
   });
+
   updateProgress();
 }
 
-// ----- LOAD AUDIT -----
-function loadAudit(auditId) {
-  currentAuditId = auditId;
-  const audit = audits[auditId];
-  document.getElementById("audit-title").textContent = audit.title;
+function loadAudit(auditId){
+  currentAuditId=auditId;
+  const audit=audits[auditId];
+  document.getElementById("audit-title").textContent=audit.title;
 
-  if (audit.type === "checklist") {
-    // Initialize checklist state if not already done
-    if (!checklistState[auditId]) {
-      checklistState[auditId] = audit.items.map(text => ({
-        text,
-        checked: false,
-        timestamp: "",
-        user: ""
-      }));
-    }
+  if(audit.type==="checklist"){
+    if(!checklistState[auditId]) checklistState[auditId]=audit.items.map(text=>({text,checked:false,timestamp:"",user:""}));
     renderChecklist();
-  } else if (audit.type === "temperature") {
-    if (!checklistState[auditId]) {
-      checklistState[auditId] = Object.entries(audit.labs).map(([labName, fields]) => ({
-        name: labName,
-        fields: fields.map(name => ({
-          name,
-          max: "",
-          min: "",
-          current: ""
-        }))
-      }));
-    }
+  } else if(audit.type==="temperature"){
+    if(!checklistState[auditId]) checklistState[auditId]=Object.entries(audit.labs).map(([labName,fields])=>({name:labName,fields:fields.map(name=>({name,max:"",min:"",current:""}))}));
     renderTemperatureInputs();
   }
 }
 
-  
-document.querySelectorAll(".audit-item").forEach(item=>{
-  item.addEventListener("click",()=>{
-    loadAudit(item.getAttribute("data-id"));
-  });
-});
-
-document.getElementById("amend-button").addEventListener("click",()=>{
-  document.querySelectorAll(".check-item").forEach(cb=>cb.disabled=false);
-  document.getElementById("amend-button").style.display="none";
-});
+document.querySelectorAll(".audit-item").forEach(item=>item.addEventListener("click",()=>loadAudit(item.getAttribute("data-id"))));
+document.getElementById("amend-button").addEventListener("click",()=>{ document.querySelectorAll(".check-item").forEach(cb=>cb.disabled=false); document.getElementById("amend-button").style.display="none"; });
 </script>
 </body>
 </html>
