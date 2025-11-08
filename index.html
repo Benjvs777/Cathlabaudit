@@ -360,22 +360,38 @@ function renderTemperatureInputs(){
 }
 
 // ----- LOAD AUDIT -----
-function loadAudit(auditId){
+function loadAudit(auditId) {
   currentAuditId = auditId;
   const audit = audits[auditId];
-  document.getElementById("audit-title").textContent=audit.title;
+  document.getElementById("audit-title").textContent = audit.title;
 
-  if(audit.type==="checklist"){
-    if(!checklistState[auditId]) checklistState[auditId] = audit.items.map(t=>({text:t,checked:false,timestamp:"",user:""}));
+  if (audit.type === "checklist") {
+    // Initialize checklist state if not already done
+    if (!checklistState[auditId]) {
+      checklistState[auditId] = audit.items.map(text => ({
+        text,
+        checked: false,
+        timestamp: "",
+        user: ""
+      }));
+    }
     renderChecklist();
-  } else if(audit.type==="temperature"){
-    if(!checklistState[auditId]) checklistState[auditId] = Object.entries(audit.labs).map(([labName,fields])=>({
-      name: labName,
-      fields: fields.map(name=>({name,max:"",min:"",current:""}))
-    }));
+  } else if (audit.type === "temperature") {
+    if (!checklistState[auditId]) {
+      checklistState[auditId] = Object.entries(audit.labs).map(([labName, fields]) => ({
+        name: labName,
+        fields: fields.map(name => ({
+          name,
+          max: "",
+          min: "",
+          current: ""
+        }))
+      }));
+    }
     renderTemperatureInputs();
   }
 }
+
   
 document.querySelectorAll(".audit-item").forEach(item=>{
   item.addEventListener("click",()=>{
