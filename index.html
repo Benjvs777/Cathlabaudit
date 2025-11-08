@@ -5,64 +5,185 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Audit Dashboard</title>
   <style>
-    /* (Your CSS remains exactly the same) */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f8;
+    }
+
+    .dashboard {
+      display: flex;
+      flex-direction: row;
+      height: 100vh;
+    }
+
+    .sidebar {
+      width: 250px;
+      background-color: #2f3e46;
+      color: white;
+      padding: 20px;
+      flex-shrink: 0;
+    }
+
+    .sidebar h2 {
+      margin-top: 0;
+      font-size: 1.2em;
+    }
+
+    .audit-item {
+      cursor: pointer;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid #444;
+      transition: background-color 0.3s ease;
+      font-size: 1em;
+    }
+
+    .audit-item:hover {
+      background-color: #3d4f58;
+    }
+
+    .icon {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      display: inline-block;
+      transition: background-color 0.3s ease;
+    }
+
+    .completed {
+      background-color: green;
+    }
+
+    .pending {
+      background-color: orange;
+    }
+
+    .not-required {
+      background-color: grey;
+    }
+
+    .content {
+      flex: 1;
+      padding: 20px;
+      background-color: #fff;
+      overflow-y: auto;
+    }
+
+    #audit-title {
+      margin-top: 0;
+      font-size: 1.5em;
+    }
+
+    .user-selector {
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .user-selector label {
+      font-weight: bold;
+    }
+
+    .progress-section {
+      margin: 20px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    progress {
+      width: 100%;
+      height: 20px;
+    }
+
+    #audit-checklist {
+      list-style: none;
+      padding: 0;
+    }
+
+    #audit-checklist li {
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .check-item {
+      margin-right: 10px;
+    }
+
+    .check-item:disabled + label {
+      color: #aaa;
+    }
+
+    .checked-item {
+      background-color: #eee;
+      color: #888;
+      text-decoration: line-through;
+    }
+
+    .meta-info {
+      margin-left: auto;
+      font-style: italic;
+      color: #666;
+      font-size: 0.85em;
+    }
+
+    .temp-input {
+      width: 80px;
+      margin-right: 10px;
+      font-size: 1em;
+      padding: 4px;
+    }
+
+    #amend-button {
+      margin-top: 20px;
+      padding: 10px 16px;
+      font-size: 1em;
+      background-color: #0077cc;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      display: none;
+    }
+
+    #amend-button:hover {
+      background-color: #005fa3;
+    }
+
+    @media (max-width: 768px) {
+      .dashboard {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        padding: 10px;
+      }
+
+      .audit-item {
+        font-size: 1.1em;
+      }
+
+      .content {
+        padding: 15px;
+      }
+
+      .temp-input {
+        width: 100px;
+      }
+    }
   </style>
 </head>
-
-<!-- ✅ Load Supabase and define functions -->
-<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-<script>
-const supabase = supabase.createClient(
-  "https://nfkfqwwegptucchhkwgj.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ma2Zxd3dlZ3B0dWNjaGhrd2dqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI1NzQzODksImV4cCI6MjA3ODE1MDM4OX0.0U8ljn3x5_V973ufQbRG4p6g9VBTksPaJTLfykepztc"
-);
-
-// --- ✅ Save a single checkbox tick to Supabase ---
-async function saveItemToDatabase(auditId, itemIndex) {
-  const item = checklistState[auditId][itemIndex];
-  const user = document.getElementById("user-select").value;
-
-  const record = {
-    audit_id: auditId,
-    item_name: item.text,
-    checked: item.checked,
-    user_name: user,
-    timestamp: new Date().toISOString()
-  };
-
-  const { error } = await supabase.from("audits").insert([record]);
-  if (error) console.error("❌ Error saving item:", error);
-  else console.log("✅ Saved:", record.item_name, record.checked);
-}
-
-// (Optional: batch save for full audit if ever needed)
-async function saveAudit(auditId) {
-  const state = checklistState[auditId];
-  const user = document.getElementById("user-select").value;
-
-  const records = state.map(item => ({
-    audit_id: auditId,
-    item_name: item.text,
-    checked: item.checked,
-    user_name: item.user || user,
-    timestamp: item.timestamp || new Date().toISOString()
-  }));
-
-  const { error } = await supabase.from("audits").insert(records);
-  if (error) console.error("Save error:", error);
-  else alert("Audit saved!");
-}
-
-async function loadAuditHistory(auditId) {
-  const { data, error } = await supabase
-    .from("audits")
-    .select("*")
-    .eq("audit_id", auditId);
-  
-  if (error) console.error(error);
-  else console.table(data);
-}
-</script>
 
 <body>
   <div class="dashboard">
@@ -100,34 +221,46 @@ async function loadAuditHistory(auditId) {
     </main>
   </div>
 
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <script>
+    // 🔧 Replace these with your Supabase details
+    const supabase = supabase.createClient(
+      "https://YOUR_PROJECT.supabase.co",
+      "YOUR_ANON_KEY"
+    );
+
+    async function saveItemToDatabase(auditId, itemIndex) {
+      const item = checklistState[auditId][itemIndex];
+      const user = document.getElementById("user-select").value;
+
+      const record = {
+        audit_id: auditId,
+        item_name: item.text,
+        checked: item.checked,
+        user_name: user,
+        timestamp: new Date().toISOString()
+      };
+
+      const { error } = await supabase.from("audits").insert([record]);
+      if (error) console.error("Error saving item:", error);
+      else console.log("Saved:", record.item_name, record.checked);
+    }
+
     const audits = {
       audit1: {
         title: "Patient Records",
         type: "checklist",
-        items: [
-          "Verify patient ID",
-          "Check admission date",
-          "Review discharge summary"
-        ]
+        items: ["Verify patient ID", "Check admission date", "Review discharge summary"]
       },
       audit2: {
         title: "Medication Logs",
         type: "checklist",
-        items: [
-          "Confirm dosage accuracy",
-          "Check administration times",
-          "Review allergy documentation"
-        ]
+        items: ["Confirm dosage accuracy", "Check administration times", "Review allergy documentation"]
       },
       audit3: {
         title: "Equipment Safety",
         type: "checklist",
-        items: [
-          "Inspect defibrillator",
-          "Check oxygen tanks",
-          "Review maintenance logs"
-        ]
+        items: ["Inspect defibrillator", "Check oxygen tanks", "Review maintenance logs"]
       },
       audit4: {
         title: "Temperatures",
@@ -153,41 +286,11 @@ async function loadAuditHistory(auditId) {
       if (audits[currentAuditId].type === "checklist") {
         total = state.length;
         filled = state.filter(item => item.checked).length;
-      } else if (audits[currentAuditId].type === "temperature") {
-        for (const lab of state) {
-          for (const field of lab.fields) {
-            total += 3;
-            if (field.max && field.min && field.current) filled += 3;
-          }
-        }
       }
 
       const percent = total ? Math.round((filled / total) * 100) : 0;
       document.getElementById("progress").value = percent;
       document.getElementById("progress-text").textContent = `${percent}%`;
-
-      const icon = document.querySelector(`.audit-item[data-id="${currentAuditId}"] .icon`);
-      if (percent === 100) {
-        icon.classList.remove("pending", "not-required");
-        icon.classList.add("completed");
-      } else {
-        icon.classList.remove("completed", "not-required");
-        icon.classList.add("pending");
-      }
-
-      const amendButton = document.getElementById("amend-button");
-      if (audits[currentAuditId].type === "checklist") {
-        const checklistItems = document.querySelectorAll(".check-item");
-        if (percent === 100) {
-          checklistItems.forEach(cb => cb.disabled = true);
-          amendButton.style.display = "inline-block";
-        } else {
-          checklistItems.forEach(cb => cb.disabled = false);
-          amendButton.style.display = "none";
-        }
-      } else {
-        amendButton.style.display = "none";
-      }
     }
 
     function renderChecklist() {
@@ -195,7 +298,6 @@ async function loadAuditHistory(auditId) {
       checklist.innerHTML = "";
 
       const items = checklistState[currentAuditId];
-      items.sort((a, b) => a.checked - b.checked);
 
       items.forEach((item, index) => {
         const li = document.createElement("li");
@@ -215,7 +317,6 @@ async function loadAuditHistory(auditId) {
         meta.className = "meta-info";
         meta.textContent = item.checked ? `✔ by ${item.user} on ${item.timestamp}` : "";
 
-        // ✅ Auto-save each time a checkbox is ticked
         checkbox.addEventListener("change", () => {
           const selectedUser = document.getElementById("user-select").value;
           item.checked = checkbox.checked;
@@ -223,7 +324,7 @@ async function loadAuditHistory(auditId) {
           item.user = checkbox.checked ? selectedUser : "";
           renderChecklist();
           updateProgress();
-          saveItemToDatabase(currentAuditId, index); // 👈 Save instantly
+          saveItemToDatabase(currentAuditId, index);
         });
 
         li.appendChild(checkbox);
@@ -235,80 +336,23 @@ async function loadAuditHistory(auditId) {
       updateProgress();
     }
 
-    function renderTemperatureInputs() {
-      const checklist = document.getElementById("audit-checklist");
-      checklist.innerHTML = "";
-
-      const labs = checklistState[currentAuditId];
-
-      labs.forEach((lab) => {
-        lab.fields.forEach((field) => {
-          const li = document.createElement("li");
-          li.innerHTML = `<strong>${lab.name} - ${field.name}</strong>`;
-
-          ["max", "min", "current"].forEach(type => {
-            const input = document.createElement("input");
-            input.type = "number";
-            input.placeholder = type;
-            input.className = "temp-input";
-            input.value = field[type];
-            input.addEventListener("input", () => {
-              field[type] = input.value;
-              updateProgress();
-            });
-            li.appendChild(input);
-          });
-
-          checklist.appendChild(li);
-        });
-      });
-
-      updateProgress();
-    }
-
     function loadAudit(auditId) {
       currentAuditId = auditId;
       const audit = audits[auditId];
       document.getElementById("audit-title").textContent = audit.title;
 
-      if (audit.type === "checklist") {
-        if (!checklistState[auditId]) {
-          checklistState[auditId] = audit.items.map(text => ({
-            text,
-            checked: false,
-            timestamp: "",
-            user: ""
-          }));
-        }
-        renderChecklist();
-      } else if (audit.type === "temperature") {
-        if (!checklistState[auditId]) {
-          checklistState[auditId] = Object.entries(audit.labs).map(([labName, fields]) => ({
-            name: labName,
-            fields: fields.map(name => ({
-              name,
-              max: "",
-              min: "",
-              current: ""
-            }))
-          }));
-        }
-        renderTemperatureInputs();
+      if (!checklistState[auditId]) {
+        checklistState[auditId] = audit.items.map(text => ({
+          text,
+          checked: false,
+          timestamp: "",
+          user: ""
+        }));
       }
+      renderChecklist();
     }
 
     document.querySelectorAll(".audit-item").forEach(item => {
       item.addEventListener("click", () => {
         const auditId = item.getAttribute("data-id");
-        loadAudit(auditId);
-      });
-    });
-
-    document.getElementById("amend-button").addEventListener("click", () => {
-      const checklistItems = document.querySelectorAll(".check-item");
-      checklistItems.forEach(cb => cb.disabled = false);
-      document.getElementById("amend-button").style.display = "none";
-    });
-  </script>
-</body>
-</html>
+        loadAudit(auditId
