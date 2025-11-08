@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Audit Summary</title>
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2f3e46;
+      margin-bottom: 30px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #0077cc;
+      color: white;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    .true {
+      color: green;
+      font-weight: bold;
+    }
+
+    .false {
+      color: red;
+      font-weight: bold;
+    }
+
+    .filter-bar {
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .filter-bar label {
+      font-weight: bold;
+    }
+
+    select, input, button {
+      padding: 6px 8px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-size: 0.95em;
+    }
+
+    button {
+      background-color: #0077cc;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #005fa3;
+    }
+
+    .loading {
+      text-align: center;
+      font-style: italic;
+      color: #666;
+      margin-top: 20px;
+    }
+
+    @media (max-width: 768px) {
+      th, td {
+        font-size: 0.9em;
+        padding: 8px;
+      }
+
+      .filter-bar {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Audit Summary Table</h1>
+
+  <div class="filter-bar">
+    <label for="date-filter">Filter by Date:</label>
+    <input type="date" id="date-filter">
+    <button id="clear-filter">Clear</button>
+  </div>
+
+  <table id="audit-table">
+    <thead>
+      <tr>
+        <th>Audit</th>
+        <th>Item</th>
+        <th>Status</th>
+        <th>User</th>
+        <th>Date / Time</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <p class="loading" id="loading-msg">Loading data...</p>
+
+  <script>
+    // 🔧 Replace these with your Supabase project details
+    const SUPABASE_URL = "https://YOUR_PROJECT.supabase.co";
+    const SUPABASE_KEY = "YOUR_ANON_KEY";
+
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const tableBody = document.querySelector("#audit-table tbody");
+    const loadingMsg = document.getElementById("loading-msg");
+
+    async function loadAudits(filterDate = null) {
+      loadingMsg.style.display = "block";
+      tableBody.innerHTML = "";
+
+      let query = supabase
+        .from("audits")
+        .select("*")
+        .order("timestamp", { ascending: false });
+
+      if (filterDate) {
+        const nextDay = new Date(filterDate);
+        nextDay.setDate(nextDay.getDate() + 1);
+        query = query
+          .gte("timestamp", filterDate)
+          .lt("timestamp", nextDay.toISOString().split("T")[0]);
+      }
+
+      const { data, error } = await query;
+
+      if (error) {
+        loadingMsg.textContent = "❌ Error loading data.";
+        console.error(error);
+        return;
+      }
+
+      loadingMsg.style.display = "none";
+
+      if (!data.length) {
+        tableBody.innerHTML = "<tr><td colspan='5' style='text-align:center'>No records found</td></tr>";
+        return;
+      }
+
+      data.forEach(row => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${row.audit_id}</td>
+          <td>${row.item_name}</td>
+          <td class="${row.checked}">${row.checked ? "✔" : "✖"}</td>
+          <td>${row.user_name}</td>
+          <td>${new Date(row.timestamp).toLocaleString()}</td>
+        `;
+        tableBody.appendChild(tr);
+      });
+    }
+
+    document.getElementById("date-filter").addEventListener("change", (e) => {
+      loadAudits(e.target.value);
+    });
+
+    document.getElementById("clear-filter").addEventListener("click", () => {
+      document.getElementById("date-filter").value = "";
+      loadAudits();
+    });
+
+    loadAudits();
+  </script>
+</body>
+</html>
