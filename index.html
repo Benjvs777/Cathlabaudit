@@ -376,7 +376,7 @@ function loadAudit(auditId){
     renderTemperatureInputs();
   }
 }
-
+  
 document.querySelectorAll(".audit-item").forEach(item=>{
   item.addEventListener("click",()=>{
     loadAudit(item.getAttribute("data-id"));
