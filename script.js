@@ -56,13 +56,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (audits[currentAuditId].type === "checklist") {
       total = state.length;
       filled = state.filter(item => item.checked).length;
-    } else if (audits[currentAuditId].type === "temperature") {
-      for (const lab of state) {
-        for (const field of lab.fields) {
-          total += 3;
-          if (field.max && field.min && field.current) filled += 3;
-        }
-      }
     }
 
     const percent = total ? Math.round((filled / total) * 100) : 0;
@@ -152,37 +145,6 @@ document.addEventListener("DOMContentLoaded", () => {
     updateProgress();
   }
 
-  function renderTemperatureInputs() {
-    const checklist = document.getElementById("audit-checklist");
-    checklist.innerHTML = "";
-
-    const labs = checklistState[currentAuditId];
-
-    labs.forEach((lab) => {
-      lab.fields.forEach((field) => {
-        const li = document.createElement("li");
-        li.innerHTML = `<strong>${lab.name} - ${field.name}</strong>`;
-
-        ["max", "min", "current"].forEach(type => {
-          const input = document.createElement("input");
-          input.type = "number";
-          input.placeholder = type;
-          input.className = "temp-input";
-          input.value = field[type];
-          input.addEventListener("input", () => {
-            field[type] = input.value;
-            updateProgress();
-          });
-          li.appendChild(input);
-        });
-
-        checklist.appendChild(li);
-      });
-    });
-
-    updateProgress();
-  }
-
   function loadAudit(auditId) {
     currentAuditId = auditId;
     const audit = audits[auditId];
@@ -198,22 +160,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }));
       }
       renderChecklist();
-    } else if (audit.type === "temperature") {
-      if (!checklistState[auditId]) {
-        checklistState[auditId] = Object.entries(audit.labs).map(([labName, fields]) => ({
-          name: labName,
-          fields: fields.map(name => ({
-            name,
-            max: "",
-            min: "",
-            current: ""
-          }))
-        }));
-      }
-      renderTemperatureInputs();
     }
   }
 
+  // Attach click listeners to sidebar items
   document.querySelectorAll(".audit-item").forEach(item => {
     item.addEventListener("click", () => {
       const auditId = item.getAttribute("data-id");
@@ -221,6 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  // Amend button logic
   document.getElementById("amend-button").addEventListener("click", () => {
     const checklistItems = document.querySelectorAll(".check-item");
     checklistItems.forEach(cb => cb.disabled = false);
