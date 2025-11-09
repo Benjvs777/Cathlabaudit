@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   // === Supabase Initialization ===
-  const supabaseUrl = 'https://your-project.supabase.co'; // Replace with your Supabase URL
-  const supabaseKey = 'your-anon-key'; // Replace with your anon/public key
+  const supabaseUrl = 'https://krzbkjuoimbzfhspqwuk.supabase.co'; // Replace with your Supabase URL
+  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtyemJranVvaW1iemZoc3Bxd3VrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI2NzAyNjcsImV4cCI6MjA3ODI0NjI2N30.De9xCheg7daQk1ydAZ_ek6uhWZ9Qe5HTMETJaUtNzhU'; // Replace with your anon/public key
   const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
   const audits = {
