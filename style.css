@@ -1,0 +1,177 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f4f6f8;
+}
+
+.dashboard {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #2f3e46;
+  color: white;
+  padding: 20px;
+  flex-shrink: 0;
+}
+
+.sidebar h2 {
+  margin-top: 0;
+  font-size: 1.2em;
+}
+
+.audit-item {
+  cursor: pointer;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid #444;
+  transition: background-color 0.3s ease;
+  font-size: 1em;
+}
+
+.audit-item:hover {
+  background-color: #3d4f58;
+}
+
+.icon {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: inline-block;
+  transition: background-color 0.3s ease;
+}
+
+.completed {
+  background-color: green;
+}
+
+.pending {
+  background-color: orange;
+}
+
+.not-required {
+  background-color: grey;
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+  background-color: #fff;
+  overflow-y: auto;
+}
+
+#audit-title {
+  margin-top: 0;
+  font-size: 1.5em;
+}
+
+.user-selector {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.user-selector label {
+  font-weight: bold;
+}
+
+.progress-section {
+  margin: 20px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+progress {
+  width: 100%;
+  height: 20px;
+}
+
+#audit-checklist {
+  list-style: none;
+  padding: 0;
+}
+
+#audit-checklist li {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.check-item {
+  margin-right: 10px;
+}
+
+.check-item:disabled + label {
+  color: #aaa;
+}
+
+.checked-item {
+  background-color: #eee;
+  color: #888;
+  text-decoration: line-through;
+}
+
+.meta-info {
+  margin-left: auto;
+  font-style: italic;
+  color: #666;
+  font-size: 0.85em;
+}
+
+.temp-input {
+  width: 80px;
+  margin-right: 10px;
+  font-size: 1em;
+  padding: 4px;
+}
+
+#amend-button {
+  margin-top: 20px;
+  padding: 10px 16px;
+  font-size: 1em;
+  background-color: #0077cc;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: none;
+}
+
+#amend-button:hover {
+  background-color: #005fa3;
+}
+
+@media (max-width: 768px) {
+  .dashboard {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .audit-item {
+    font-size: 1.1em;
+  }
+
+  .content {
+    padding: 15px;
+  }
+
+  .temp-input {
+    width: 100px;
+  }
+}
