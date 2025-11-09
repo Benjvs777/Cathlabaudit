@@ -1,3 +1,9 @@
+// === Supabase Initialization ===
+const supabaseUrl = 'https://krzbkjuoimbzfhspqwuk.supabase.co'; // Replace with your Supabase URL
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtyemJranVvaW1iemZoc3Bxd3VrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI2NzAyNjcsImV4cCI6MjA3ODI0NjI2N30.De9xCheg7daQk1ydAZ_ek6uhWZ9Qe5HTMETJaUtNzhU'; // Replace with your anon/public key
+const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+// === Audit Definitions ===
 const audits = {
   audit1: {
     title: "Patient Records",
@@ -112,13 +118,32 @@ function renderChecklist() {
     meta.className = "meta-info";
     meta.textContent = item.checked ? `✔ by ${item.user} on ${item.timestamp}` : "";
 
-    checkbox.addEventListener("change", () => {
+    checkbox.addEventListener("change", async () => {
       const selectedUser = document.getElementById("user-select").value;
       item.checked = checkbox.checked;
       item.timestamp = checkbox.checked ? new Date().toLocaleString() : "";
       item.user = checkbox.checked ? selectedUser : "";
+
       renderChecklist();
       updateProgress();
+
+      if (checkbox.checked) {
+        const { error } = await supabase
+          .from('audit_checklist_items')
+          .insert([{
+            audit_id: currentAuditId,
+            item_text: item.text,
+            checked: true,
+            timestamp: new Date().toISOString(),
+            user: selectedUser
+          }]);
+
+        if (error) {
+          console.error("Supabase insert error:", error.message);
+        } else {
+          console.log("Item submitted to Supabase:", item.text);
+        }
+      }
     });
 
     li.appendChild(checkbox);
